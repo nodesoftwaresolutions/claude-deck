@@ -29,8 +29,10 @@ what shipped while you were away.
 **Shipped (cont.)**
 - ✅ `deck restore --only <id,id>` — bring back a subset of sessions (matches the 8-char ids from `--dry-run`). Verified filtering 11→1.
 
+**Shipped (cont.)**
+- ✅ Second terminal back-end: **tmux** (`src/tmux.mjs`) with the same interface as wezterm, plus a `src/terminal.mjs` selector chosen by `config.terminal`. Refactored status/restore/doctor to be back-end-agnostic. Proves Deck isn't WezTerm-only → opens the whole macOS/Linux market. +2 tests (tmux parser + selector). Windows/wezterm path unchanged + verified.
+
 **Queued (in priority order)**
-- [ ] Second terminal back-end — Windows Terminal or tmux (proves it's not WezTerm-only).
 - [ ] Demo asset — a scripted asciinema/GIF of `status` → restart → `restore`.
 - [ ] `npm publish` the package (needs an npm token — one command once you're set up).
 

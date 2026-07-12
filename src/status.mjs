@@ -8,7 +8,7 @@ import path from "node:path";
 import { loadConfig } from "./config.mjs";
 import { snapshot } from "./snapshot.mjs";
 import { backupState } from "./backup.mjs";
-import { listPanes, isSessionPane, clean } from "./wezterm.mjs";
+import { backend, isSessionPane, clean } from "./terminal.mjs";
 
 const ago = (ms) => {
   const s = Math.max(0, Math.round(ms / 1000));
@@ -27,7 +27,7 @@ function backedUp(dest, id) {
 export function status() {
   const cfg = loadConfig();
   const now = Date.now();
-  const panes = listPanes();
+  const panes = backend(cfg.terminal).listPanes();
   const snap = snapshot({ write: false });
   const bk = backupState();
   const out = [];

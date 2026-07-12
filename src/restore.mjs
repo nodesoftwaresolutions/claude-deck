@@ -2,16 +2,17 @@
 // (preserved across the shutdown), then the live snapshot.
 import { existsSync, readFileSync } from "node:fs";
 import { SNAPSHOT_PATH, PREREBOOT_PATH, loadConfig } from "./config.mjs";
-import { restoreGrid, isAvailable } from "./wezterm.mjs";
+import { backend } from "./terminal.mjs";
 
 const LAUNCHER = process.env.DECK_LAUNCHER || "claude"; // the CLI used to resume a session
 
 export function restore({ dryRun = false, only = null } = {}) {
   const cfg = loadConfig();
+  const term = backend(cfg.terminal);
   const src = pickSource();
   if (!src) return { ok: false, reason: "no snapshot found — has `deck snapshot` ever run?" };
-  if (!dryRun && !isAvailable()) {
-    return { ok: false, reason: "terminal back-end not found — install WezTerm, or set DECK_WEZTERM to its path (`deck restore --dry-run` works without it)." };
+  if (!dryRun && !term.isAvailable()) {
+    return { ok: false, reason: `terminal back-end '${cfg.terminal || "wezterm"}' not found — install it or set config.terminal (\`deck restore --dry-run\` works without it).` };
   }
 
   let sessions = (src.snap.sessions || []).filter((s) => s.cwd && s.sessionId);
@@ -33,7 +34,7 @@ export function restore({ dryRun = false, only = null } = {}) {
     };
   }
 
-  const res = restoreGrid(sessions, cfg.perWindow, LAUNCHER);
+  const res = term.restoreGrid(sessions, cfg.perWindow, LAUNCHER);
   return { ok: true, source: src.name, count: sessions.length, ...res };
 }
 

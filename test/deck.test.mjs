@@ -7,6 +7,8 @@ import { isSessionPane, clean } from "../src/wezterm.mjs";
 import { transcriptMeta } from "../src/transcripts.mjs";
 import { doctor } from "../src/doctor.mjs";
 import { liveAgentPids, resolveOwningPid } from "../src/proc.mjs";
+import { parsePanes } from "../src/tmux.mjs";
+import { backend, backendNames } from "../src/terminal.mjs";
 
 test("isSessionPane: bare shells are not sessions", () => {
   for (const t of ["cmd.exe", "powershell.exe", "pwsh.exe", "bash", "zsh", "C:\\WINDOWS\\system32\\cmd.exe".split("\\").pop()]) {
@@ -49,6 +51,23 @@ test("proc: liveAgentPids returns a Set and never throws (cross-platform)", () =
 test("proc: resolveOwningPid(null) is null, never throws", () => {
   assert.equal(resolveOwningPid(null), null);
   assert.equal(resolveOwningPid(0), null);
+});
+
+test("tmux parsePanes maps tab-separated rows to pane objects", () => {
+  const raw = "$0\t@1\t%2\tClaude Code\t/home/me/proj\n$0\t@1\t%3\tbash\t/home/me\n";
+  const panes = parsePanes(raw);
+  assert.equal(panes.length, 2);
+  assert.deepEqual(panes[0], { window_id: "$0", tab_id: "@1", pane_id: "%2", title: "Claude Code", cwd: "/home/me/proj" });
+  assert.equal(panes[1].cwd, "/home/me");
+  assert.deepEqual(parsePanes(""), []);
+});
+
+test("terminal.backend selects by name, falls back to wezterm", () => {
+  assert.ok(backendNames().includes("tmux"));
+  assert.equal(typeof backend("wezterm").restoreGrid, "function");
+  assert.equal(typeof backend("tmux").listPanes, "function");
+  // unknown name -> wezterm fallback (has restoreGrid)
+  assert.equal(typeof backend("nope").restoreGrid, "function");
 });
 
 test("doctor runs and returns a report + numeric fail count", () => {

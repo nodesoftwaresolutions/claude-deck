@@ -2,7 +2,8 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { CLAUDE_SETTINGS, CONFIG_PATH, SNAPSHOT_PATH, REGISTRY_DIR } from "./config.mjs";
 import { backupState } from "./backup.mjs";
-import { isAvailable } from "./wezterm.mjs";
+import { backend } from "./terminal.mjs";
+import { loadConfig } from "./config.mjs";
 
 const PASS = "✓", FAIL = "✗", WARN = "!";
 
@@ -47,9 +48,10 @@ export function doctor() {
     `${bk.inBackup}/${bk.onDisk} mirrored`, "run `deck backup`");
 
   // 6. terminal back-end?
-  const wez = isAvailable();
-  add(wez ? PASS : WARN, "Terminal back-end", wez ? "WezTerm found" : "WezTerm not on PATH (restore needs it)",
-    "install WezTerm or set DECK_WEZTERM to its path");
+  const termName = loadConfig().terminal || "wezterm";
+  const termOk = backend(termName).isAvailable();
+  add(termOk ? PASS : WARN, "Terminal back-end", termOk ? `${termName} found` : `${termName} not on PATH (restore needs it)`,
+    `install ${termName}, or set config.terminal to an available back-end`);
 
   const lines = ["Deck doctor", "==========="];
   for (const c of checks) {

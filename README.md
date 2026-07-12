@@ -64,9 +64,9 @@ dropped panes.
 
 ## Install
 
-> **v1 targets Claude Code + [WezTerm](https://wezterm.org) on Windows** — the
-> combination this was proven on. macOS/Linux and other terminals are on the
-> roadmap; PRs welcome (the core is terminal-agnostic).
+> **Proven on Claude Code + [WezTerm](https://wezterm.org) on Windows**, with a
+> **tmux back-end** for macOS/Linux (`terminal: "tmux"` in config). Other
+> terminals are a small module away — PRs welcome (the core is terminal-agnostic).
 
 ```bash
 npm install -g claude-deck
@@ -99,15 +99,16 @@ a restart, run `deck restore` (or let the auto-restore task do it on login).
 {
   "backupDir": "~/ClaudeSessionBackup", // where transcripts are mirrored
   "perWindow": 6,                       // panes per window on restore
-  "terminal": "wezterm",                // v1: wezterm
+  "terminal": "wezterm",                // "wezterm" (Windows) or "tmux" (macOS/Linux)
   "interactiveOnly": true               // restore chats you drove, not job runs
 }
 ```
 
 ## Roadmap
 
-- [ ] macOS / Linux process walk-up (`ps` instead of PowerShell)
-- [ ] tmux + Zellij + Windows Terminal back-ends
+- [x] macOS / Linux process walk-up (`ps` instead of PowerShell)
+- [x] tmux back-end
+- [ ] Zellij + Windows Terminal back-ends
 - [ ] Other agent CLIs (Codex, Aider, Cursor CLI)
 - [ ] Optional encrypted cloud sync of the grid + backup (the paid tier)
 
