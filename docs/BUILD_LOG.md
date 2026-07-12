@@ -26,8 +26,10 @@ what shipped while you were away.
 **Shipped (cont.)**
 - ✅ Real email-capture waitlist on the landing page — Formspree-backed form with async submit + success/error states, graceful "not wired yet" message until you paste a form id. **One step for you:** create a free form at formspree.io and replace `YOUR_FORM_ID` in `site/index.html`.
 
+**Shipped (cont.)**
+- ✅ `deck restore --only <id,id>` — bring back a subset of sessions (matches the 8-char ids from `--dry-run`). Verified filtering 11→1.
+
 **Queued (in priority order)**
-- [ ] `deck restore --pick` — choose which sessions to bring back (`--only <ids>` / numbered pick).
 - [ ] Second terminal back-end — Windows Terminal or tmux (proves it's not WezTerm-only).
 - [ ] Demo asset — a scripted asciinema/GIF of `status` → restart → `restore`.
 - [ ] `npm publish` the package (needs an npm token — one command once you're set up).

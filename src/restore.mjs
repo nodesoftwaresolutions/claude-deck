@@ -6,7 +6,7 @@ import { restoreGrid, isAvailable } from "./wezterm.mjs";
 
 const LAUNCHER = process.env.DECK_LAUNCHER || "claude"; // the CLI used to resume a session
 
-export function restore({ dryRun = false } = {}) {
+export function restore({ dryRun = false, only = null } = {}) {
   const cfg = loadConfig();
   const src = pickSource();
   if (!src) return { ok: false, reason: "no snapshot found — has `deck snapshot` ever run?" };
@@ -16,6 +16,13 @@ export function restore({ dryRun = false } = {}) {
 
   let sessions = (src.snap.sessions || []).filter((s) => s.cwd && s.sessionId);
   if (cfg.interactiveOnly) sessions = sessions.filter((s) => s.preview !== undefined); // all kept for v1; hook for job-run filtering
+
+  // --only <id-prefixes>: restore just the matching sessions (pairs with --dry-run's list).
+  if (only && only.length) {
+    const wanted = only.map((x) => x.toLowerCase().trim()).filter(Boolean);
+    sessions = sessions.filter((s) => wanted.some((w) => s.sessionId.toLowerCase().startsWith(w)));
+    if (!sessions.length) return { ok: false, reason: `no session matched --only ${only.join(",")} (run --dry-run to see ids)` };
+  }
 
   if (!sessions.length) return { ok: false, reason: "snapshot has no restorable sessions" };
 

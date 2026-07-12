@@ -12,6 +12,7 @@ import { doctor } from "../src/doctor.mjs";
 
 const [cmd, ...args] = process.argv.slice(2);
 const has = (f) => args.includes(f);
+const flag = (f) => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : null; };
 
 try {
   switch (cmd) {
@@ -27,7 +28,8 @@ try {
     }
 
     case "restore": {
-      const res = restore({ dryRun: has("--dry-run") });
+      const onlyVal = flag("--only");
+      const res = restore({ dryRun: has("--dry-run"), only: onlyVal ? onlyVal.split(",") : null });
       if (!res.ok) { console.error("Restore failed:", res.reason); process.exit(1); }
       if (res.dryRun) {
         console.log(`Would restore ${res.count} session(s) (source: ${res.source}):`);
@@ -76,7 +78,7 @@ try {
       console.log(`Deck — never lose your Claude Code sessions.
 
   deck status               show your grid + what's recorded + backup proof
-  deck restore [--dry-run]  rebuild your grid after a restart
+  deck restore [--dry-run] [--only <id,id>]  rebuild your grid (or a subset) after a restart
   deck snapshot             capture live sessions now (also runs every minute)
   deck backup               mirror transcripts to the safe backup now
   deck doctor               diagnose a broken install and show the fix
