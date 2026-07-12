@@ -9,7 +9,8 @@
   "scripts": {
     "status": "node bin/deck.mjs status",
     "snapshot": "node bin/deck.mjs snapshot",
-    "restore": "node bin/deck.mjs restore"
+    "restore": "node bin/deck.mjs restore",
+    "test": "node --test test/"
   },
   "keywords": [
     "claude",

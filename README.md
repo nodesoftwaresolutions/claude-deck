@@ -2,6 +2,11 @@
 
 **Never lose your Claude Code sessions again.**
 
+[![CI](https://github.com/nodesoftwaresolutions/claude-deck/actions/workflows/ci.yml/badge.svg)](https://github.com/nodesoftwaresolutions/claude-deck/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-6ee7b7.svg)](./LICENSE)
+![Node](https://img.shields.io/badge/node-%3E%3D18-38bdf8.svg)
+![Zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)
+
 You run a dozen terminal AI-coding sessions across a grid of panes. Then your PC
 restarts — a Windows update, a crash, a reboot — and they're *gone*. The layout,
 the context, which chat was doing what. You spend the next hour trying to

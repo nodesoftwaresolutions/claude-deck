@@ -40,18 +40,17 @@ export function restoreGrid(sessions, perWindow, launcher) {
   for (let i = 0; i < sessions.length; i += perWindow) chunks.push(sessions.slice(i, i + perWindow));
 
   if (guiUp) {
-    for (const chunk of chunks) {
-      let first = true;
-      for (const s of chunk) {
-        const args = ["cli", "spawn", "--cwd", s.cwd || os.homedir()];
-        if (!first) { /* same window: spawn adds a tab; keep simple */ }
-        execFileSync(WEZTERM, args, { stdio: "ignore", timeout: 8000 });
-        first = false;
-        // send the resume command into the new pane
-        // (wezterm cli send-text needs the pane id; simplest path is the launcher shell)
-      }
+    // A GUI is already up: spawn each session as a new tab running its resume
+    // command directly (grid-within-window via the CLI is unreliable; tabs aren't).
+    const win = process.platform === "win32";
+    let count = 0;
+    for (const s of sessions) {
+      const resume = `${launcher} --resume ${s.sessionId}`;
+      const runner = win ? ["cmd", "/k", resume] : ["bash", "-lc", `${resume}; exec bash`];
+      const args = ["cli", "spawn", "--cwd", s.cwd || os.homedir(), "--", ...runner];
+      try { execFileSync(WEZTERM, args, { stdio: "ignore", timeout: 8000 }); count++; } catch {}
     }
-    return { windows: chunks.length, mode: "cli-spawn" };
+    return { windows: 1, panes: count, mode: "cli-spawn (tabs)" };
   }
 
   // No GUI: emit a startup Lua the user launches (or the login task launches).
