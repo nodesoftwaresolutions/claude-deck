@@ -27,6 +27,8 @@ $ deck status
 $ deck restore        # after a reboot — your whole grid comes back
 ```
 
+**[▶ See the full 30-second demo →](./docs/DEMO.md)**
+
 ---
 
 ## Why this exists
