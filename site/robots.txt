@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nodesoftwaresolutions.github.io/claude-deck/sitemap.xml
