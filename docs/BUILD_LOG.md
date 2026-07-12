@@ -20,13 +20,15 @@ what shipped while you were away.
 - ✅ npm publish readiness — `npm pack` verified clean (15kB, bin+src+README+LICENSE only, no test/site cruft). Ready to `npm publish`.
 - ✅ Launch-post drafts — `docs/launch/`: Show HN, r/ClaudeAI, Claude Code Discord.
 
+**Shipped (cont.)**
+- ✅ POSIX hardening — `proc.mjs` refactor: configurable agent process name (`DECK_AGENT_PROCESS`), timeouts on every process call, `liveAgentPids` never throws (empty Set on failure), cross-platform ancestor walk-up. `restore` now returns a clean "terminal back-end not found" guard instead of crashing when WezTerm is absent. +2 tests.
+
 **Queued (in priority order)**
-- [ ] `npm publish` the package (needs an npm token — one command once you're set up).
-- [ ] Demo asset — a scripted asciinema/GIF of `status` → restart → `restore` for the README + landing hero.
-- [ ] POSIX hardening — exercise the `ps` walk-up + `pgrep` path; make status/backup degrade gracefully with no WezTerm.
+- [ ] Waitlist that actually captures emails (Formspree embed) instead of a mailto.
+- [ ] `deck restore --pick` — choose which sessions to bring back (`--only <ids>` / numbered pick).
 - [ ] Second terminal back-end — Windows Terminal or tmux (proves it's not WezTerm-only).
-- [ ] Waitlist that actually captures emails (Formspree/Tally embed) instead of a mailto.
-- [ ] `deck restore --pick` — interactive selection of which sessions to bring back.
+- [ ] Demo asset — a scripted asciinema/GIF of `status` → restart → `restore`.
+- [ ] `npm publish` the package (needs an npm token — one command once you're set up).
 
 **Decisions parked for you**
 - Landing page hosting: GitHub Pages (free, one toggle) vs S3+CloudFront (custom domain, your AWS). Pages workflow is wired; enable it in Settings → Pages → Source: GitHub Actions for an instant live URL.

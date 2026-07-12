@@ -6,6 +6,7 @@ import os from "node:os";
 import { isSessionPane, clean } from "../src/wezterm.mjs";
 import { transcriptMeta } from "../src/transcripts.mjs";
 import { doctor } from "../src/doctor.mjs";
+import { liveAgentPids, resolveOwningPid } from "../src/proc.mjs";
 
 test("isSessionPane: bare shells are not sessions", () => {
   for (const t of ["cmd.exe", "powershell.exe", "pwsh.exe", "bash", "zsh", "C:\\WINDOWS\\system32\\cmd.exe".split("\\").pop()]) {
@@ -37,6 +38,17 @@ test("transcriptMeta pulls cwd + last human preview from a transcript tail", () 
   const meta = transcriptMeta(f);
   assert.equal(meta.cwd, "C:/Dev/foo");
   assert.equal(meta.preview, "the real last question here");
+});
+
+test("proc: liveAgentPids returns a Set and never throws (cross-platform)", () => {
+  const pids = liveAgentPids();
+  assert.ok(pids instanceof Set);
+  for (const p of pids) assert.equal(typeof p, "number");
+});
+
+test("proc: resolveOwningPid(null) is null, never throws", () => {
+  assert.equal(resolveOwningPid(null), null);
+  assert.equal(resolveOwningPid(0), null);
 });
 
 test("doctor runs and returns a report + numeric fail count", () => {
