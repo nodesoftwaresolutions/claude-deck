@@ -5,6 +5,7 @@ import path from "node:path";
 import os from "node:os";
 import { isSessionPane, clean } from "../src/wezterm.mjs";
 import { transcriptMeta } from "../src/transcripts.mjs";
+import { doctor } from "../src/doctor.mjs";
 
 test("isSessionPane: bare shells are not sessions", () => {
   for (const t of ["cmd.exe", "powershell.exe", "pwsh.exe", "bash", "zsh", "C:\\WINDOWS\\system32\\cmd.exe".split("\\").pop()]) {
@@ -36,6 +37,14 @@ test("transcriptMeta pulls cwd + last human preview from a transcript tail", () 
   const meta = transcriptMeta(f);
   assert.equal(meta.cwd, "C:/Dev/foo");
   assert.equal(meta.preview, "the real last question here");
+});
+
+test("doctor runs and returns a report + numeric fail count", () => {
+  const r = doctor();
+  assert.equal(typeof r.text, "string");
+  assert.ok(r.text.includes("Deck doctor"));
+  assert.equal(typeof r.fails, "number");
+  assert.ok(r.fails >= 0);
 });
 
 test("transcriptMeta skips hook/noise messages when choosing preview", () => {

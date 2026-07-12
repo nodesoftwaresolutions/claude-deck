@@ -15,13 +15,16 @@ what shipped while you were away.
 - ✅ Fixed restore bug — GUI path now actually runs `claude --resume` per session.
 - ✅ CONTRIBUTING.md, README badges, MIT LICENSE.
 
+**Shipped (cont.)**
+- ✅ `deck doctor` — 6-check diagnostic (hooks wired, config, snapshots running, sessions self-registering, backup healthy, terminal back-end) with per-check fixes.
+- ✅ npm publish readiness — `npm pack` verified clean (15kB, bin+src+README+LICENSE only, no test/site cruft). Ready to `npm publish`.
+- ✅ Launch-post drafts — `docs/launch/`: Show HN, r/ClaudeAI, Claude Code Discord.
+
 **Queued (in priority order)**
-- [ ] npm publish readiness — verify `npm pack` contents, add a `prepublishOnly` guard, publish `claude-deck@0.1.0`.
-- [ ] `deck doctor` — diagnose a broken install (hooks not wired, no snapshots, backup stale).
+- [ ] `npm publish` the package (needs an npm token — one command once you're set up).
 - [ ] Demo asset — a scripted asciinema/GIF of `status` → restart → `restore` for the README + landing hero.
 - [ ] POSIX hardening — exercise the `ps` walk-up + `pgrep` path; make status/backup degrade gracefully with no WezTerm.
 - [ ] Second terminal back-end — Windows Terminal or tmux (proves it's not WezTerm-only).
-- [ ] Launch post drafts — r/ClaudeAI, HN "Show HN", the Claude Code Discord.
 - [ ] Waitlist that actually captures emails (Formspree/Tally embed) instead of a mailto.
 - [ ] `deck restore --pick` — interactive selection of which sessions to bring back.
 

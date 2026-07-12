@@ -8,6 +8,7 @@ import { restore } from "../src/restore.mjs";
 import { backup } from "../src/backup.mjs";
 import { record } from "../src/record.mjs";
 import { install, uninstall } from "../src/install.mjs";
+import { doctor } from "../src/doctor.mjs";
 
 const [cmd, ...args] = process.argv.slice(2);
 const has = (f) => args.includes(f);
@@ -64,6 +65,13 @@ try {
       break;
     }
 
+    case "doctor": {
+      const r = doctor();
+      console.log(r.text);
+      if (r.fails) process.exit(1);
+      break;
+    }
+
     default:
       console.log(`Deck — never lose your Claude Code sessions.
 
@@ -71,6 +79,7 @@ try {
   deck restore [--dry-run]  rebuild your grid after a restart
   deck snapshot             capture live sessions now (also runs every minute)
   deck backup               mirror transcripts to the safe backup now
+  deck doctor               diagnose a broken install and show the fix
   deck install              wire the recorder hooks + config
   deck uninstall            remove the hooks
 `);
