@@ -1,0 +1,35 @@
+{
+  "name": "claude-deck",
+  "version": "0.1.0",
+  "description": "Never lose your Claude Code sessions again — auto-restore your terminal grid and back up every transcript after a restart.",
+  "type": "module",
+  "bin": {
+    "deck": "bin/deck.mjs"
+  },
+  "scripts": {
+    "status": "node bin/deck.mjs status",
+    "snapshot": "node bin/deck.mjs snapshot",
+    "restore": "node bin/deck.mjs restore"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "terminal",
+    "session",
+    "resume",
+    "wezterm",
+    "backup",
+    "ai-agents",
+    "developer-tools"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT"
+}
