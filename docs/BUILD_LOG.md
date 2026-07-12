@@ -23,8 +23,10 @@ what shipped while you were away.
 **Shipped (cont.)**
 - ✅ POSIX hardening — `proc.mjs` refactor: configurable agent process name (`DECK_AGENT_PROCESS`), timeouts on every process call, `liveAgentPids` never throws (empty Set on failure), cross-platform ancestor walk-up. `restore` now returns a clean "terminal back-end not found" guard instead of crashing when WezTerm is absent. +2 tests.
 
+**Shipped (cont.)**
+- ✅ Real email-capture waitlist on the landing page — Formspree-backed form with async submit + success/error states, graceful "not wired yet" message until you paste a form id. **One step for you:** create a free form at formspree.io and replace `YOUR_FORM_ID` in `site/index.html`.
+
 **Queued (in priority order)**
-- [ ] Waitlist that actually captures emails (Formspree embed) instead of a mailto.
 - [ ] `deck restore --pick` — choose which sessions to bring back (`--only <ids>` / numbered pick).
 - [ ] Second terminal back-end — Windows Terminal or tmux (proves it's not WezTerm-only).
 - [ ] Demo asset — a scripted asciinema/GIF of `status` → restart → `restore`.

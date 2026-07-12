@@ -164,11 +164,34 @@ Restoring 14 session(s) into 3 window(s). <span class="ok">done</span></div>
 <section id="waitlist" style="text-align:center"><div class="wrap">
   <h2>Turn a restart into a non-event</h2>
   <p class="lead">Get the free tool now. Want cloud sync across machines? Leave your email and we'll ping you at launch.</p>
-  <div class="cta">
+  <div class="cta" style="margin-bottom:26px">
     <a class="btn primary" href="https://github.com/nodesoftwaresolutions/claude-deck" target="_blank" rel="noopener">Get Deck on GitHub</a>
-    <a class="btn ghost" href="mailto:hello@nodesoftwaresolutions.com?subject=Deck%20Cloud%20Sync%20waitlist">Join the waitlist →</a>
   </div>
+  <!-- Wire this to your free Formspree form: create one at https://formspree.io, paste its id below. -->
+  <form id="waitform" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" style="max-width:440px;margin:0 auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+    <input type="email" name="email" required placeholder="you@company.com" aria-label="Email"
+      style="flex:1;min-width:220px;background:var(--card);border:1px solid var(--line);color:var(--fg);border-radius:10px;padding:12px 14px;font-size:15px;font-family:var(--sans)">
+    <input type="hidden" name="_subject" value="Deck Cloud Sync waitlist">
+    <button class="btn primary" type="submit" style="border:none;cursor:pointer">Join the waitlist →</button>
+    <p id="waitmsg" style="width:100%;margin:6px 0 0;color:var(--accent);font-size:14px;min-height:20px"></p>
+  </form>
 </div></section>
+
+<script>
+(function(){
+  var f=document.getElementById('waitform'),m=document.getElementById('waitmsg');
+  if(!f)return;
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(f.action.indexOf('YOUR_FORM_ID')>-1){m.style.color='var(--warn)';m.textContent='Waitlist not wired yet — set your Formspree id in index.html.';return;}
+    m.style.color='var(--muted)';m.textContent='Sending…';
+    fetch(f.action,{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'}})
+      .then(function(r){if(r.ok){f.reset();m.style.color='var(--accent)';m.textContent='You’re on the list — we’ll email you at launch. ✓';}
+        else{m.style.color='var(--warn)';m.textContent='Something went wrong. Email hello@nodesoftwaresolutions.com instead.';}})
+      .catch(function(){m.style.color='var(--warn)';m.textContent='Network error — try again in a moment.';});
+  });
+})();
+</script>
 
 <footer><div class="wrap">
   <div class="foot-links">
