@@ -77,6 +77,14 @@
   .dot-r{background:#ff5f57}.dot-y{background:#febc2e}.dot-g{background:#28c840}
   .term .body{padding:20px 22px;font-family:var(--mono);font-size:13px;line-height:1.7;overflow-x:auto;white-space:pre;color:#cdd6e4}
   .term .body .c{color:var(--muted)}.term .body .ok{color:var(--accent)}.term .body .hd{color:var(--accent2);font-weight:700}.term .body .warn{color:var(--warn)}
+  .term .body .line{display:block}
+  .term-cursor{display:inline-block;width:7px;height:14px;background:var(--accent);vertical-align:text-bottom;margin-left:2px;animation:blink 1s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+  .mini-grid{display:none;grid-template-columns:repeat(3,1fr);gap:6px;padding:2px 22px 20px}
+  .mini-grid .pane{height:32px;border:1px solid var(--line);border-radius:6px;background:var(--bg2);display:flex;align-items:center;padding:0 9px;font-family:var(--mono);font-size:10.5px;color:var(--muted);overflow:hidden;white-space:nowrap;opacity:0;transform:scale(.92) translateY(4px)}
+  .mini-grid .pane.on{animation:pane-in .4s cubic-bezier(.2,.8,.2,1) forwards}
+  @keyframes pane-in{to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion: reduce){.term-cursor{animation:none}}
   /* sections */
   section{padding:72px 0}
   h2{font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;margin:0 0 12px;text-align:center;font-weight:800}
@@ -136,7 +144,7 @@
 
   <div class="term">
     <div class="bar"><i class="dot-r"></i><i class="dot-y"></i><i class="dot-g"></i></div>
-<div class="body"><span class="c">$ deck status</span>
+<div class="body" id="deckterm"><span class="c">$ deck status</span>
 <span class="hd">THE GRID</span>          3 windows · 5 tabs · 14 live sessions
 <span class="hd">RECONCILE</span>        14 live agent panes  vs  14 recorded  ->  <span class="ok">MATCH ✓</span>
 <span class="hd">RECORDED</span>         14/14 sessions captured — each resumable
@@ -145,6 +153,7 @@
 
 <span class="c">$ deck restore</span>   <span class="c"># after a reboot — your whole grid comes back</span>
 Restoring 14 session(s) into 3 window(s). <span class="ok">done</span></div>
+    <div class="mini-grid" id="minigrid" aria-hidden="true"></div>
   </div>
 </div></header>
 
@@ -230,5 +239,53 @@ Restoring 14 session(s) into 3 window(s). <span class="ok">done</span></div>
   Deck is an independent open-source tool · not affiliated with or endorsed by Anthropic.<br>
   © 2026 Node Software Solutions · MIT licensed
 </div></footer>
+
+<script>
+/* Animated terminal hero: types `deck status`, streams the report, then `deck restore`
+   spins up the grid, and loops. Falls back to the static content if JS is off or the
+   viewer prefers reduced motion. Zero dependencies — matches the product. */
+(function(){
+  var el=document.getElementById('deckterm'), grid=document.getElementById('minigrid');
+  if(!el||!grid) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; // keep static
+  var alive=true, io;
+  var sleep=function(ms){return new Promise(function(r){setTimeout(r,ms);});};
+  function line(html){var d=document.createElement('div');d.className='line';if(html!=null)d.innerHTML=html;el.appendChild(d);return d;}
+  async function type(node,text,speed){for(var i=0;i<text.length;i++){node.textContent+=text[i];await sleep(speed);}}
+
+  var STATUS=[
+    '<span class="hd">THE GRID</span>          3 windows &middot; 5 tabs &middot; 14 live sessions',
+    '<span class="hd">RECONCILE</span>        14 live agent panes  vs  14 recorded  -&gt;  <span class="ok">MATCH &#10003;</span>',
+    '<span class="hd">RECORDED</span>         14/14 sessions captured &mdash; each resumable',
+    '<span class="hd">BACKUP</span>           238/238 transcripts mirrored (fresh 2s ago)',
+    '<span class="hd">VERDICT</span>          <span class="ok">OK &mdash; a restart cannot lose your work.</span>'
+  ];
+  var PANES=['Fix webhook retry','Draft board update','Refactor auth','Investigate e2e','Claude Code','optimum limits','Enable modules','Review PRs','+6 more'];
+
+  async function prompt(cmd){
+    var l=line('<span class="c">$ </span>'); var t=document.createElement('span'); l.appendChild(t);
+    var cur=document.createElement('span'); cur.className='term-cursor'; l.appendChild(cur);
+    await type(t,cmd,55); cur.remove(); return l;
+  }
+  async function run(){
+    if(!alive) return;
+    el.innerHTML=''; grid.innerHTML=''; grid.style.display='none';
+    await sleep(400);
+    await prompt('deck status'); await sleep(350);
+    for(var i=0;i<STATUS.length;i++){ if(!alive)return; line(STATUS[i]); await sleep(230); }
+    await sleep(750);
+    await prompt('deck restore'); await sleep(300);
+    var r=line('Restoring 14 session(s) into 3 window(s)'); await sleep(250);
+    grid.style.display='grid';
+    for(var p=0;p<PANES.length;p++){ if(!alive)return; var pane=document.createElement('div'); pane.className='pane'; pane.textContent='• '+PANES[p]; grid.appendChild(pane); await sleep(110); pane.classList.add('on'); }
+    await sleep(350); r.innerHTML='Restoring 14 session(s) into 3 window(s). <span class="ok">done &#10003;</span>';
+    await sleep(3400); run();
+  }
+  if('IntersectionObserver' in window){
+    io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){io.disconnect();run();}});},{threshold:.4});
+    io.observe(el.closest('.term'));
+  } else { run(); }
+})();
+</script>
 </body>
 </html>
