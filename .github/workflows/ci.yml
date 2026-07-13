@@ -19,4 +19,4 @@ jobs:
         run: node --check bin/deck.mjs && for f in src/*.mjs; do node --check "$f"; done
         shell: bash
       - name: Test
-        run: node --test test/
+        run: node --test test/deck.test.mjs

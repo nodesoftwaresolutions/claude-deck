@@ -10,7 +10,7 @@
     "status": "node bin/deck.mjs status",
     "snapshot": "node bin/deck.mjs snapshot",
     "restore": "node bin/deck.mjs restore",
-    "test": "node --test test/"
+    "test": "node --test test/deck.test.mjs"
   },
   "keywords": [
     "claude",
