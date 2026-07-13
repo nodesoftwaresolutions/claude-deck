@@ -15,7 +15,7 @@ Captures sessions by process id (not file-mtime guessing), so idle-but-open pane
 don't get dropped — that was the bug that made my first version only find 2 of my
 18 sessions 😅
 
-`npm i -g claude-deck && deck install`
+`npm i -g nodesoftwaresolutions/claude-deck && deck install`
 <https://github.com/nodesoftwaresolutions/claude-deck>
 
 v1 is WezTerm/Windows; would love tmux/macOS PRs.

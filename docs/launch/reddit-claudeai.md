@@ -22,7 +22,7 @@ I made **Deck** to fix it (free, open source, MIT):
 - `deck status` shows your grid + proves everything's captured before you restart.
 
 ```
-npm install -g claude-deck && deck install
+npm install -g nodesoftwaresolutions/claude-deck && deck install
 ```
 
 Repo: https://github.com/nodesoftwaresolutions/claude-deck

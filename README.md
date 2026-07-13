@@ -71,7 +71,7 @@ dropped panes.
 > terminals are a small module away — PRs welcome (the core is terminal-agnostic).
 
 ```bash
-npm install -g claude-deck
+npm install -g nodesoftwaresolutions/claude-deck
 deck install     # wires the Claude Code hooks + the 1-min snapshot task
 ```
 
